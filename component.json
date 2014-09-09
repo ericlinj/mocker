@@ -1,0 +1,14 @@
+{
+  "name": "mocker",
+  "repo": "ericlinj/mocker",
+  "description": "mocker client component",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ],
+
+  "dependencies": {
+    "component/emitter": "*",
+    "component/jquery": "*"
+  }
+}
