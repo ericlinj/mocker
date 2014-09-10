@@ -8,10 +8,38 @@ Emitter(Mocker.prototype);
 /////////////////////////constractor
 function Mocker() {
   Emitter.call(this);
-  this.initMockDataCache();
 }
 
-Mocker.prototype.initMockDataCache = function() {
+Mocker.prototype.initAjaxProxy = function(){
+	this.on("mockAjax", function(opt) {
+		  console.info("mockAjax:"+opt.url);
+	    var mockurl = ["http://",
+	      window.mocker_server_host,
+	      ":",
+	      window.mocker_server_port,
+	      "/",
+	      window.mocker_server_prefix,
+	      "/",
+	      opt.url,
+	      "?callback=?"
+	    ].join("");
+
+	    var sucCallback = opt.success;
+
+	    // console.info("create new xhr :" + mockurl);
+	    $.ajax({
+	      type:"get",
+	      url: mockurl,
+	      dataType: "jsonp",
+	      success: function(data) {
+
+	        sucCallback && sucCallback(data);
+	      }
+	    });
+	  })
+};
+
+Mocker.prototype.initMockDataCache = function(callback) {
   var mockurl = ["http://",
     window.mocker_server_host,
     ":",
@@ -33,12 +61,16 @@ Mocker.prototype.initMockDataCache = function() {
       $.each(details, function(index, detail) {
         mockDataCache[detail.url] = detail.is_mock;
       })
+      
+      callback && typeof(callback) === "function" && callback();
     }
   });
 };
 
 //////////////////
-Mocker.prototype.start = function() {
+Mocker.prototype.start = function(callback) {
+  this.initAjaxProxy();
+  this.initMockDataCache(callback);
   var me = this;
   console.info("starting listening mocker-client....")
   //intercept ajax and emit event
@@ -53,33 +85,10 @@ Mocker.prototype.start = function() {
     }
 
   });
+  
 
-  //catch event
-  me.on("mockAjax", function(opt) {
-    var mockurl = ["http://",
-      window.mocker_server_host,
-      ":",
-      window.mocker_server_port,
-      "/",
-      window.mocker_server_prefix,
-      "/",
-      opt.url,
-      "?callback=?"
-    ].join("");
 
-    var sucCallback = opt.success;
-
-    // console.info("create new xhr :" + mockurl);
-    $.ajax({
-      type: 'GET',
-      url: mockurl,
-      dataType: "jsonp",
-      success: function(data) {
-
-        sucCallback && sucCallback(data);
-      }
-    });
-  })
+ 
 }
 
 Mocker.prototype.stop = function() {

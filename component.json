@@ -6,7 +6,6 @@
   "scripts": [
     "index.js"
   ],
-
   "dependencies": {
     "component/emitter": "*",
     "component/jquery": "*"
