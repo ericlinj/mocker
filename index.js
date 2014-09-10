@@ -71,6 +71,7 @@ Mocker.prototype.start = function() {
 
     // console.info("create new xhr :" + mockurl);
     $.ajax({
+      type: 'GET',
       url: mockurl,
       dataType: "jsonp",
       success: function(data) {
