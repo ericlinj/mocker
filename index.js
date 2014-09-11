@@ -13,7 +13,6 @@ function Mocker() {
 Mocker.prototype.initAjaxProxy = function(){
   this.on("mockAjax", function(opt) {
     var sFlag = opt.url.indexOf("/") === 0;
-		  console.info("mockAjax:"+opt.url);
 	    var mockurl = ["http://",
 	      window.mocker_server_host,
 	      ":",
@@ -31,6 +30,7 @@ Mocker.prototype.initAjaxProxy = function(){
 	    $.ajax({
 	      type:"get",
 	      url: mockurl,
+        data: opt.data,
 	      dataType: "jsonp",
 	      success: function(data) {
 
