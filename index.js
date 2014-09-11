@@ -12,32 +12,32 @@ function Mocker() {
 
 Mocker.prototype.initAjaxProxy = function(){
   this.on("mockAjax", function(opt) {
-    var sFlag = opt.url.indexOf("/") === 0;
-	    var mockurl = ["http://",
-	      window.mocker_server_host,
-	      ":",
-	      window.mocker_server_port,
-	      "/",
-	      window.mocker_server_prefix,
-	      sFlag ? "" : "/",
-	      opt.url,
-	      "?callback=?"
-	    ].join("");
+      // console.info("mockAjax:"+opt.url);
+      var mockurl = ["http://",
+        window.mocker_server_host,
+        ":",
+        window.mocker_server_port,
+        "/",
+        window.mocker_server_prefix,
+        opt.url.indexOf('/') === 0 ? '' : '/',
+        opt.url,
+        "?callback=?"
+      ].join("");
 
-	    var sucCallback = opt.success;
+      var sucCallback = opt.success;
 
-	    // console.info("create new xhr :" + mockurl);
-	    $.ajax({
-	      type:"get",
-	      url: mockurl,
-        data: opt.data,
-	      dataType: "jsonp",
-	      success: function(data) {
+      // console.info("create new xhr :" + mockurl);
+      $.ajax({
+        type:"get",
+        url: mockurl,
+        data: opt.data || {},
+        dataType: "jsonp",
+        success: function(data) {
 
-	        sucCallback && sucCallback(data);
-	      }
-	    });
-	  })
+          sucCallback && sucCallback(data);
+        }
+      });
+    })
 };
 
 Mocker.prototype.initMockDataCache = function(callback) {
@@ -54,9 +54,7 @@ Mocker.prototype.initMockDataCache = function(callback) {
 
   $.ajax({
     url: mockurl,
-    data: {
-      project_id: 1
-    },
+    data: "project_id="+ window.mocker_project_id || 1,
     dataType: "jsonp",
     success: function(details) {
       $.each(details, function(index, detail) {
