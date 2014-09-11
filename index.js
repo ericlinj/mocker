@@ -11,6 +11,7 @@ function Mocker() {
 }
 
 Mocker.prototype.initAjaxProxy = function(){
+  var sFlag = opt.url.indexOf("/") === 0 ;
 	this.on("mockAjax", function(opt) {
 		  console.info("mockAjax:"+opt.url);
 	    var mockurl = ["http://",
@@ -19,7 +20,7 @@ Mocker.prototype.initAjaxProxy = function(){
 	      window.mocker_server_port,
 	      "/",
 	      window.mocker_server_prefix,
-	      "/",
+	      sFlag ? "" : "/",
 	      opt.url,
 	      "?callback=?"
 	    ].join("");
@@ -61,7 +62,7 @@ Mocker.prototype.initMockDataCache = function(callback) {
       $.each(details, function(index, detail) {
         mockDataCache[detail.url] = detail.is_mock;
       })
-      
+
       callback && typeof(callback) === "function" && callback();
     }
   });
@@ -85,10 +86,10 @@ Mocker.prototype.start = function(callback) {
     }
 
   });
-  
 
 
- 
+
+
 }
 
 Mocker.prototype.stop = function() {
