@@ -11,8 +11,8 @@ function Mocker() {
 }
 
 Mocker.prototype.initAjaxProxy = function(){
-  var sFlag = opt.url.indexOf("/") === 0 ;
-	this.on("mockAjax", function(opt) {
+  this.on("mockAjax", function(opt) {
+    var sFlag = opt.url.indexOf("/") === 0;
 		  console.info("mockAjax:"+opt.url);
 	    var mockurl = ["http://",
 	      window.mocker_server_host,
