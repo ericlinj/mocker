@@ -33,6 +33,7 @@ Mocker.prototype.initAjaxProxy = function() {
 
     var sucCallback = opt.success;
 
+
     // console.info("create new xhr :" + mockurl);
     var mockData = typeof(opt.data) === 'object' ? {msg:"only string data is pass"} : opt.data;
     $.ajax({
