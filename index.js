@@ -86,6 +86,9 @@ Mocker.prototype.start = function(callback) {
     $(document).ajaxSend(function(event, xhr, opt) {
       if (opt.dataType !== 'jsonp') {
         var url = opt.url;
+        if(url.indexOf('?') != -1){
+        	url = url.substring(url.indexOf('/') , url.indexOf('?'))
+        }
         //validate ismock for every xhr!
         if (mockDataCache && mockDataCache[url] && parseInt(mockDataCache[url], 10) === 1) {
           xhr.abort();
