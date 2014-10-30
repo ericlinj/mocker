@@ -20,6 +20,7 @@ function Mocker() {
 Mocker.prototype.initAjaxProxy = function() {
   this.on("mockAjax", function(opt) {
     // console.info("mockAjax:"+opt.url);
+	var splitStr = opt.url.indexOf('?') != -1 ? "&" : "?";
     var mockurl = ["http://",
       window.mocker_server_host,
       ":",
@@ -28,7 +29,8 @@ Mocker.prototype.initAjaxProxy = function() {
       window.mocker_server_prefix,
       opt.url.indexOf('/') === 0 ? '' : '/',
       opt.url,
-      "?callback=?"
+      splitStr,
+      "callback=?"
     ].join("");
 
     var sucCallback = opt.success;
@@ -41,8 +43,8 @@ Mocker.prototype.initAjaxProxy = function() {
       url: mockurl,
       data: mockData,
       dataType: "jsonp",
+      contentType: 'application/javascript',
       success: function(data) {
-
         sucCallback && sucCallback(data);
       }
     });
